@@ -64,7 +64,8 @@ class SliderView {
     }
 
     constructor(canvas, controller) {
-        this.shiftsLeft = 1;
+        this.shiftsLeft = null;
+        this.shiftsRight = null;
         this.canvas = canvas;
         this.currentSlideElement = null;
         this.controller = controller;
@@ -96,7 +97,6 @@ class SliderView {
         this.getPrevSlideElement().style.width = containerWidth + 'px';
         this.getPrevSlideElement().style.left = -containerWidth + 'px';
     }
-
 
     asyncShiftLeft = async () => {
         console.log(await this.shiftLeft());
@@ -157,6 +157,20 @@ class SliderView {
             
             
             dotLink.href = '#';
+
+
+            dotLink.addEventListener('click', () => {
+                // Are we going to the right?
+                
+                
+                if (i > this.currentSlideIndex) {
+                    console.log('we are going forward by ' + (i - this.currentSlideIndex));
+                    this.shiftLeft((i - this.currentSlideIndex));
+                } else if (i < this.currentSlideIndex) {
+                    console.log('we are going back by ' + (this.currentSlideIndex - i));
+                    this.shiftRight((this.currentSlideIndex - i));
+                }
+            });
             
             
             
@@ -175,19 +189,14 @@ class SliderView {
         nextBtn.addEventListener('click', async function(evt) {
             if (!self.isAnimating) {
                 self.isAnimating = true;
-                // await self.shiftLeft();
-                self.asyncShiftLeft();
-                console.log('finished in next button')
-                
-                
-                
+                self.shiftLeft(1);
             }
         });
 
         previousBtn.addEventListener('click', function(evt) {
             if (!self.isAnimating) {
                 self.isAnimating = true;
-                self.shiftRight();
+                self.shiftRight(1);
             }
         });
 
@@ -220,9 +229,12 @@ class SliderView {
     }
 
     // So we have a shift count
-    shiftLeft() {
+    shiftLeft(shiftCount) {
+
      //   this.shiftsLeft = shiftCount;
-        
+        if (this.shiftsLeft == null) {
+            this.shiftsLeft = shiftCount;
+        }
 
         // console.log(remainingShifts);
         //this.count = 2;
@@ -285,9 +297,15 @@ class SliderView {
             
 
             // What is the answer?
-            // this.shiftsLeft--;
+            this.shiftsLeft--;
+            console.log(this.shiftsLeft);
             
-            
+            if (this.shiftsLeft > 0) {
+                this.shiftLeft();
+            } else {
+                this.shiftsLeft = null;
+            }
+
             // if (typeof callback == 'function')
             // callback();
        
@@ -311,6 +329,11 @@ class SliderView {
 
 
     shiftRight(shiftCount = null) {
+        if (this.shiftsRight == null) {
+            this.shiftsRight = shiftCount;
+        }
+
+
         this.isAnimating = true;
         const duration = 500;
         let currentTime = +new Date();
@@ -365,7 +388,14 @@ class SliderView {
                 }
             }, this);
             
+            this.shiftsRight--;
             
+
+            if (this.shiftsRight > 0) {
+                this.shiftRight(1);
+            } else {
+                this.shiftsRight = null;
+            }
             
             //this.shiftRight();
             return;
