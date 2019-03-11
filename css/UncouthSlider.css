@@ -5,7 +5,7 @@
 }
 
 .uncouthSlider {
-  background-color: yellow;
+  /* background-color: yellow; */
   height: 390px;
   position: relative;
   overflow-x: hidden;
@@ -74,4 +74,17 @@ i {
 .down {
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
+}
+
+.dot {
+  height: 15px;
+  width: 15px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 8px;
+}
+
+.dot.active {
+  background-color: black;
 }

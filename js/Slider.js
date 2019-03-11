@@ -64,6 +64,7 @@ class SliderView {
     }
 
     constructor(canvas, controller) {
+        this.shiftsLeft = 1;
         this.canvas = canvas;
         this.currentSlideElement = null;
         this.controller = controller;
@@ -96,7 +97,12 @@ class SliderView {
         this.getPrevSlideElement().style.left = -containerWidth + 'px';
     }
 
-    render() {
+
+    asyncShiftLeft = async () => {
+        console.log(await this.shiftLeft());
+    }
+
+    async render() {
         var container = document.createElement('div');
         container.classList.add('uncouthSlider');
         this.canvas.appendChild(container);
@@ -105,7 +111,6 @@ class SliderView {
         this.prevSlideElement = this.getPrevSlideElement();
     
         this.prevSlideElement.style.left = -(this.canvas.offsetWidth) + 'px';
-//        this.prevSlideElement.style.backgroundColor = 'orange';
 
         this.nextSlideElement = this.getNextSlideElement();
         this.nextSlideElement.style.left = this.canvas.offsetLeft + this.canvas.offsetWidth + 'px';
@@ -128,11 +133,54 @@ class SliderView {
         nextBtn.innerHTML = '<i class="arrow right"></i>';
         container.appendChild(nextBtn);
 
+
+        // Add dot links
+
+        const dotsContainer = document.createElement('div');
+        for (let i = 0; i < this.getAllSlides().slideModels.length; i++) {
+
+            dotsContainer.style.bottom = 0;
+            dotsContainer.style.left = '50%';
+            dotsContainer.style.transform = 'translateX(-50%)';
+            dotsContainer.style.position = 'absolute';
+            
+            
+    
+    
+            const dotLink = document.createElement('a');
+            
+            if (i == 0) {
+                dotLink.innerHTML = '<span class="dot active"></span>';
+            } else {
+                dotLink.innerHTML = '<span class="dot"></span>';
+            }
+            
+            
+            dotLink.href = '#';
+            
+            
+            
+            
+            dotsContainer.appendChild(dotLink);
+        }
+        
+
+
+        container.appendChild(dotsContainer);
+
+
+
+
         var self = this;
-        nextBtn.addEventListener('click', function(evt) {
+        nextBtn.addEventListener('click', async function(evt) {
             if (!self.isAnimating) {
                 self.isAnimating = true;
-                self.shiftLeft();
+                // await self.shiftLeft();
+                self.asyncShiftLeft();
+                console.log('finished in next button')
+                
+                
+                
             }
         });
 
@@ -171,7 +219,14 @@ class SliderView {
         
     }
 
+    // So we have a shift count
     shiftLeft() {
+     //   this.shiftsLeft = shiftCount;
+        
+
+        // console.log(remainingShifts);
+        //this.count = 2;
+
         const duration = 500;
         let currentTime = +new Date();
 
@@ -182,6 +237,7 @@ class SliderView {
         const containerWidth = this.canvas.offsetWidth;
         let left = this.currentSlideElement.offsetLeft;
 
+        // We are going left, so check to see if the current left is 
         if (left > -containerWidth && currentTime <= this.end) {
             let whatsLeft = this.end - currentTime;
             
@@ -192,7 +248,10 @@ class SliderView {
             this.i = -slidePosition;
             this.currentSlideElement.style.left = this.i + 'px';
             this.getNextSlideElement().style.left = (containerWidth + this.i) + 'px';
+            return 0;
         } else {
+            // This code runs when everything in the above has finished. The entirety of the drawing happens above!
+            // So how can we make it deal with multiple shifts?
             this.i = 0;
             this.end = null;
 
@@ -214,15 +273,37 @@ class SliderView {
             this.getPrevSlideElement().style.left = -(this.canvas.width) + 'px';
             this.isAnimating = false;
             this.fixLayout();
-            return;
-        }
+            
+            const dotsArray = document.querySelectorAll('.dot');
+            dotsArray.forEach(function(dot, index) {
+                if (index == this.currentSlideIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            }, this);
+            
 
+            // What is the answer?
+            // this.shiftsLeft--;
+            
+            
+            // if (typeof callback == 'function')
+            // callback();
+       
+            return 1;
+        }
+        
         var self = this;
 
-        this.globalId = requestAnimationFrame(function() {
-            self.shiftLeft();
-        });
 
+        this.globalId = requestAnimationFrame(function() {
+            if (self.shiftLeft() == 1) {
+                console.log('Finished!')
+                // self.shiftLeft();
+                return 0;
+            }
+        });
     }
 
 
@@ -233,8 +314,6 @@ class SliderView {
         this.isAnimating = true;
         const duration = 500;
         let currentTime = +new Date();
-
-        console.log(shiftCount);
 
         if (this.end === null) {
             this.end = +new Date() + duration;
@@ -266,7 +345,6 @@ class SliderView {
             
             if (this.currentSlideIndex !== 0) {
                 this.currentSlideIndex--;
-                
             } else {
                 this.currentSlideIndex = this.slideElements.length - 1;
             }
@@ -277,19 +355,34 @@ class SliderView {
             this.isAnimating = false;
             this.fixLayout();
 
-            // This works but runs infinitely.
-            // this.shiftRight();
+            const dotsArray = document.querySelectorAll('.dot');
 
-
+            dotsArray.forEach(function(dot, index) {
+                if (index == this.currentSlideIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            }, this);
+            
+            
+            
+            //this.shiftRight();
             return;
+            
         }
 
         var self = this;
 
         this.globalId = requestAnimationFrame(function() {
             self.shiftRight();
+            
         });
+    
+    
     }
+
+    
 }
 
 // Controller
@@ -308,13 +401,9 @@ class SlideView {
     constructor(model) {
         this.slideElement = document.createElement('div');
         this.slideElement.classList.add('slide');
-        this.slideElement.style.backgroundColor = 'green';
         this.slideElement.style.position = 'absolute';
         this.slideElement.style.top = '0';
-        // this.slideElement.style.left = '0';
         this.slideElement.style.height = '100%';
-        //this.slideElement.style.width = '100%';
-
 
         // Create the image
         const sliderImage = document.createElement('img');
@@ -364,3 +453,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var slider = new Slider(container, [slideOne, slideTwo, slideThree]);
     slider.render();
 });
+
+/*
+    We need to
+        Remove the red background.
+        Style the current dot to be darker.
+
+        
+
+*/
