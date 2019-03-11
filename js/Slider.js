@@ -248,7 +248,7 @@ class SliderView {
             this.i = -slidePosition;
             this.currentSlideElement.style.left = this.i + 'px';
             this.getNextSlideElement().style.left = (containerWidth + this.i) + 'px';
-            return 0;
+            
         } else {
             // This code runs when everything in the above has finished. The entirety of the drawing happens above!
             // So how can we make it deal with multiple shifts?
