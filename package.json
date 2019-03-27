@@ -1,0 +1,23 @@
+{
+  "name": "uncouthslider",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "node-sass": "^4.11.0"
+  },
+  "scripts": {
+    "compile:sass": "node-sass sass/UncouthSlider.scss css/UncouthSlider.css -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashduckett/UncouthSlider.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ashduckett/UncouthSlider/issues"
+  },
+  "homepage": "https://github.com/ashduckett/UncouthSlider#readme"
+}

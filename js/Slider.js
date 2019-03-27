@@ -83,7 +83,6 @@ class SliderView {
         slideModels.forEach(function(slide) {
             this.slideElements.push(slide.view.slideElement);
         }, this);
-        
     }
 
     fixLayout() {
@@ -96,10 +95,6 @@ class SliderView {
 
         this.getPrevSlideElement().style.width = containerWidth + 'px';
         this.getPrevSlideElement().style.left = -containerWidth + 'px';
-    }
-
-    asyncShiftLeft = async () => {
-        console.log(await this.shiftLeft());
     }
 
     async render() {
@@ -121,31 +116,27 @@ class SliderView {
 
         this.container = container;
 
-        const previousBtn = document.createElement('a');
-        previousBtn.classList.add('sliderPrevBtn');
-        previousBtn.href = '#';
-        previousBtn.innerHTML = '<i class="arrow left"></i>';
-        container.appendChild(previousBtn);
+        // Next buttons could be optional
+        // const previousBtn = document.createElement('a');
+        // previousBtn.classList.add('sliderPrevBtn');
+        // previousBtn.href = '#';
+        // previousBtn.innerHTML = '<i class="arrow left"></i>';
+        // container.appendChild(previousBtn);
 
-        const nextBtn = document.createElement('a');
-        nextBtn.classList.add('sliderNextBtn');
-        nextBtn.href = '#';
-        nextBtn.innerHTML = '<i class="arrow right"></i>';
-        container.appendChild(nextBtn);
+        // const nextBtn = document.createElement('a');
+        // nextBtn.classList.add('sliderNextBtn');
+        // nextBtn.href = '#';
+        // nextBtn.innerHTML = '<i class="arrow right"></i>';
+        // container.appendChild(nextBtn);
 
 
         // Add dot links
 
         const dotsContainer = document.createElement('div');
-        for (let i = 0; i < this.getAllSlides().slideModels.length; i++) {
+        dotsContainer.classList.add('uncouthSlider__dotsContainer');
 
-            dotsContainer.style.bottom = 0;
-            dotsContainer.style.left = '50%';
-            dotsContainer.style.transform = 'translateX(-50%)';
-            dotsContainer.style.position = 'absolute';
-            
-            
-    
+
+        for (let i = 0; i < this.getAllSlides().slideModels.length; i++) {
     
             const dotLink = document.createElement('a');
             
@@ -160,14 +151,10 @@ class SliderView {
 
 
             dotLink.addEventListener('click', () => {
-                // Are we going to the right?
-                
-                
+                // Someone hit a dot to the right of the current one.
                 if (i > this.currentSlideIndex) {
-                    console.log('we are going forward by ' + (i - this.currentSlideIndex));
                     this.shiftLeft((i - this.currentSlideIndex));
                 } else if (i < this.currentSlideIndex) {
-                    console.log('we are going back by ' + (this.currentSlideIndex - i));
                     this.shiftRight((this.currentSlideIndex - i));
                 }
             });
@@ -186,19 +173,19 @@ class SliderView {
 
 
         var self = this;
-        nextBtn.addEventListener('click', async function(evt) {
-            if (!self.isAnimating) {
-                self.isAnimating = true;
-                self.shiftLeft(1);
-            }
-        });
+        // nextBtn.addEventListener('click', async function(evt) {
+        //     if (!self.isAnimating) {
+        //         self.isAnimating = true;
+        //         self.shiftLeft(1);
+        //     }
+        // });
 
-        previousBtn.addEventListener('click', function(evt) {
-            if (!self.isAnimating) {
-                self.isAnimating = true;
-                self.shiftRight(1);
-            }
-        });
+        // previousBtn.addEventListener('click', function(evt) {
+        //     if (!self.isAnimating) {
+        //         self.isAnimating = true;
+        //         self.shiftRight(1);
+        //     }
+        // });
 
         
 
@@ -230,14 +217,9 @@ class SliderView {
 
     // So we have a shift count
     shiftLeft(shiftCount) {
-
-     //   this.shiftsLeft = shiftCount;
         if (this.shiftsLeft == null) {
             this.shiftsLeft = shiftCount;
         }
-
-        // console.log(remainingShifts);
-        //this.count = 2;
 
         const duration = 500;
         let currentTime = +new Date();
@@ -254,13 +236,10 @@ class SliderView {
             let whatsLeft = this.end - currentTime;
             
             let percentOfDurationPassed = (100 - (whatsLeft / duration) * 100);
-
-
             let slidePosition = containerWidth / 100 * percentOfDurationPassed;
             this.i = -slidePosition;
             this.currentSlideElement.style.left = this.i + 'px';
             this.getNextSlideElement().style.left = (containerWidth + this.i) + 'px';
-            
         } else {
             // This code runs when everything in the above has finished. The entirety of the drawing happens above!
             // So how can we make it deal with multiple shifts?
@@ -298,41 +277,26 @@ class SliderView {
 
             // What is the answer?
             this.shiftsLeft--;
-            console.log(this.shiftsLeft);
-            
             if (this.shiftsLeft > 0) {
                 this.shiftLeft();
             } else {
                 this.shiftsLeft = null;
             }
-
-            // if (typeof callback == 'function')
-            // callback();
-       
-            return 1;
+            return;
         }
         
         var self = this;
 
 
         this.globalId = requestAnimationFrame(function() {
-            if (self.shiftLeft() == 1) {
-                console.log('Finished!')
-                // self.shiftLeft();
-                return 0;
-            }
+            self.shiftLeft();
         });
     }
-
-
-
-
 
     shiftRight(shiftCount = null) {
         if (this.shiftsRight == null) {
             this.shiftsRight = shiftCount;
         }
-
 
         this.isAnimating = true;
         const duration = 500;
@@ -389,7 +353,6 @@ class SliderView {
             }, this);
             
             this.shiftsRight--;
-            
 
             if (this.shiftsRight > 0) {
                 this.shiftRight(1);
@@ -397,7 +360,6 @@ class SliderView {
                 this.shiftsRight = null;
             }
             
-            //this.shiftRight();
             return;
             
         }
@@ -406,19 +368,18 @@ class SliderView {
 
         this.globalId = requestAnimationFrame(function() {
             self.shiftRight();
-            
         });
     
     
     }
-
-    
 }
 
 // Controller
 class Slide {
-    constructor(title, text, imageName) {
-        this.model = new SlideModel(title, text, imageName);
+
+
+    constructor(profileName, profilePosition, quotation, imageName) {
+        this.model = new SlideModel(profileName, profilePosition, quotation, imageName);
         this.view = new SlideView(this.model);
     }
 
@@ -440,6 +401,42 @@ class SlideView {
         sliderImage.src = 'img/' + model.imageName;
         sliderImage.classList.add('sliderImage');
 
+        
+        const sliderQuote = document.createElement('p');
+        sliderQuote.innerHTML = model.quotation;
+        sliderQuote.classList.add('sliderQuote');
+        
+        
+        const sliderProfileContainer = document.createElement('div');
+        sliderProfileContainer.style.height = '100px';
+        sliderProfileContainer.style.width = '600px';
+
+        sliderProfileContainer.classList.add('sliderProfileContainer');
+
+        const sliderProfileImage = document.createElement('img');
+        sliderProfileImage.src = 'img/' + model.imageName;
+        sliderProfileImage.style.width = '70px';
+        sliderProfileImage.style.height = '70px';
+        sliderProfileImage.classList.add('sliderProfileImage');
+
+        const sliderProfileName = document.createElement('h3');
+        sliderProfileName.innerHTML = model.profileName;
+        sliderProfileName.classList.add('profileName');
+        
+        const sliderProfileTitle = document.createElement('h4');
+        sliderProfileTitle.innerHTML = model.profilePosition;
+        sliderProfileTitle.classList.add('profileTitle');
+
+
+        sliderProfileContainer.appendChild(sliderProfileImage);
+
+        const sliderProfileCredentials = document.createElement('div');
+        sliderProfileCredentials.classList.add('profileCredentials');
+        sliderProfileCredentials.appendChild(sliderProfileName);
+        sliderProfileCredentials.appendChild(sliderProfileTitle);
+        
+        sliderProfileContainer.appendChild(sliderProfileCredentials);
+
         // Create the title
         const sliderTitle = document.createElement('h2');
         sliderTitle.innerHTML = model.title;
@@ -452,11 +449,9 @@ class SlideView {
         const sliderCenterPiece = document.createElement('div');
         sliderCenterPiece.classList.add('sliderCenterPiece');
         
+        sliderCenterPiece.appendChild(sliderQuote);
+        sliderCenterPiece.appendChild(sliderProfileContainer);
         
-        sliderCenterPiece.appendChild(sliderImage);
-        sliderCenterPiece.appendChild(sliderTitle);
-        sliderCenterPiece.appendChild(sliderText);
-
         this.slideElement.appendChild(sliderCenterPiece);
     }
 
@@ -466,29 +461,28 @@ class SlideView {
 }
 
 class SlideModel {
-    constructor(title, text, imageName) {
-        this.title = title;
-        this.text = text;
+    // profileName, profilePosition, quotation, imageName
+    constructor(profileName, profilePosition, quotation, imageName) {
+        this.profileName = profileName;
+        this.profilePosition = profilePosition;
+        this.quotation = quotation;
+        
+        // this.title = title;
+        // this.text = text;
         this.imageName = imageName;
     }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    var slideOne = new Slide('Title 1', 'This is some text 1', 'avatar.svg');
-    var slideTwo = new Slide('Title 2', 'This is some text 2', 'avatar.svg');
-    var slideThree = new Slide('Title 3', 'This is some text 3', 'avatar.svg');
+    // profileName, profilePosition, quotation, imageName
+    
+    var slideOne = new Slide('Will Carr', 'Digital Project Manager, Conceptai', 'Ash is a fantastic developer and incredibly talented. He is a highly motivated individual often going above and beyond to complete projects. He has been a great asset to the team and it was hard to see him go!', 'will.jpg');
+    var slideTwo = new Slide('Will Carr', 'Digital Project Manager, Conceptai', 'Ash is a fantastic developer and incredibly talented. He is a highly motivated individual often going above and beyond to complete projects. He has been a great asset to the team and it was hard to see him go!', 'will.jpg');
+    var slideThree = new Slide('Will Carr', 'Digital Project Manager, Conceptai', 'Ash is a fantastic developer and incredibly talented. He is a highly motivated individual often going above and beyond to complete projects. He has been a great asset to the team and it was hard to see him go!', 'will.jpg');
+    
     
     var container = document.querySelector('.sliderContainer');
 
     var slider = new Slider(container, [slideOne, slideTwo, slideThree]);
     slider.render();
 });
-
-/*
-    We need to
-        Remove the red background.
-        Style the current dot to be darker.
-
-        
-
-*/
