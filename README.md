@@ -8,25 +8,25 @@ This slider works by having a flexbox to contain your slides and around that a c
 Create your HTML:
 
 ```
-    <div class="slider-container">
-        <div class="slider">
-            <div class="slide">
-                <h2>Image</h2>
-                <h3>Header 1</h3>
-                <p>Some text</p>
-            </div>
-            <div class="slide">
-                <h2>Image</h2>
-                <h3>Header 2</h3>
-                <p>Some text</p>
-            </div>
-            <div class="slide">
-                <h2>Image</h2>
-                <h3>Header 3</h3>
-                <p>Some text</p>
-            </div>
+<div class="slider-container">
+    <div class="slider">
+        <div class="slide">
+            <h2>Image</h2>
+            <h3>Header 1</h3>
+            <p>Some text</p>
+        </div>
+        <div class="slide">
+            <h2>Image</h2>
+            <h3>Header 2</h3>
+            <p>Some text</p>
+        </div>
+        <div class="slide">
+            <h2>Image</h2>
+            <h3>Header 3</h3>
+            <p>Some text</p>
         </div>
     </div>
+</div>
 ```
 
 Currently the container and inner divs have very generic names. This could change in the future but it works for me.
