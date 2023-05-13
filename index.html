@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/slider.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="fontawesome/css/all.css">
+    <script type="module" src="slider.js"></script>
+    <script type="module" src="main.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="slider-container">
+        <div class="slider">
+            <div class="slide">
+                <h2>Image</h2>
+                <h3>Header 1</h3>
+                <p>Some text</p>
+            </div>
+            <div class="slide">
+                <h2>Image</h2>
+                <h3>Header 2</h3>
+                <p>Some text</p>
+            </div>
+            <div class="slide">
+                <h2>Image</h2>
+                <h3>Header 3</h3>
+                <p>Some text</p>
+            </div>
+            <div class="slide">
+                <h2>Image</h2>
+                <h3>Header 4</h3>
+                <p>Some text</p>
+            </div>
+            <div class="slide">
+                <h2>Image</h2>
+                <h3>Header 5</h3>
+                <p>Some text</p>
+            </div>
+            <div class="slide">
+                <h2>Image</h2>
+                <h3>Header 6</h3>
+                <p>Some text</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<!-- There's a flaw. If you want to show two slides at a time, you need six slides. -->
+<!-- If you want to show three you need nine. -->
+<!-- This is because it wants to prepare the previous set before the current set and expects you to have a full slide of three at the start and end. -->
+<!-- However, it seems reasonable to want to display only 2 slides at a time and only have four. -->
