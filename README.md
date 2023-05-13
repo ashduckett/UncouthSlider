@@ -37,11 +37,11 @@ Make sure the CSS and JS files are included. It also uses Font Awesome. I'll hav
 
 Rather than passing in arguments for your settings which would make sense, I'm writing this at a time when I'm ready to just use it and it's late and I'm tired. Hopefully I'll come back and edit this `README.md` file soon. However there are a few abilities that the slider has with one restriction: Due to the method used to create animation, you will always need to have the correct number of slides each side of the visible portion. This is dictated by however many slides you are animating by; if you animate by 3 slides at a time, you'll need 6 of them split between the offscreen areas to the right. This seems excessive, but if you want 5 slides, you want to show three at a time, but animate across by only 1 slide at a time, then you only need 5. This means to use this slider you will always need a minimum of three slides if animation is expected. Consideration will be given in the future to ways that this can be improved either by injecting new slides where necessary, but this works for me for now.
 
+## Constraints
+
+It is the coder's responsibility to ensure that the correct number of slides will sit either side of the visible area of the slider to allow the animation to work. If you have three visible slides then you'll need nine slides if you want to slide three slide's worth each time. If you only shift by one, only display one, then you'll still need a minimum of three.
+
 ## Abilities
-
-### No. of Slides
-
-The number of slides is worked out by the number of slides provided in the DOM.
 
 ### No. of Slides to Display
 
